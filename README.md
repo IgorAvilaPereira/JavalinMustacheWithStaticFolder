@@ -57,3 +57,57 @@ public class JavalinParamsExample {
     }
 }
 ```
+
+## Mustache Examples
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{pageTitle}}</title>
+</head>
+<body>
+    <h1>Welcome, {{userName}}!</h1>
+    <p>Your favorite color is: {{favoriteColor}}</p>
+    <ul>
+        {{#items}}
+        <li>{{.}}</li>
+        {{/items}}
+    </ul>
+</body>
+</html>
+```
+
+```java
+import io.javalin.Javalin;
+import io.javalin.rendering.FileRenderer; // Import this
+import io.javalin.rendering.JavalinRenderer;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class App {
+
+    public static void main(String[] args) {
+        Javalin app = Javalin.create(config -> {
+            // Enable static file serving
+            config.staticFiles.add("/public");
+        }).start(7070);
+
+        // Register Mustache with the file extension ".mustache"
+        JavalinRenderer.registerMustache(); // Registers .mustache templates
+
+        app.get("/", ctx -> {
+            // Create the data model
+            Map<String, Object> model = new HashMap<>();
+            model.put("pageTitle", "My Awesome Page");
+            model.put("userName", "Alice");
+            model.put("items", List.of("Apple", "Banana", "Cherry")); // A list of items
+
+            // Render the template, passing the model
+            ctx.render("index.mustache", model);
+        });
+    }
+}
+```
