@@ -5,6 +5,10 @@ import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinMustache;
 import static io.javalin.rendering.template.TemplateUtil.model;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author iapereira
@@ -28,7 +32,11 @@ public class Main {
         }).start(7070);
         
         app.get("/", ctx -> {
-            ctx.render("/templates/index.html", model("action", "John"));
+            Map<String, Object> model = new HashMap<>();
+            model.put("pageTitle", "My Awesome Page");
+            model.put("userName", "Alice");
+            model.put("items", List.of("Apple", "Banana", "Cherry")); // A list of items
+            ctx.render("/templates/index.html", model);
         });
 
         /*
